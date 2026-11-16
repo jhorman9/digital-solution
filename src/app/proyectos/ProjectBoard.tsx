@@ -20,13 +20,19 @@ export default function ProjectBoard({ projects }: { projects: P[] }) {
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [overStatus, setOverStatus] = useState<P["status"] | null>(null);
 
-  const handleDragStart = (event: DragEvent<HTMLElement>, projectId: string) => {
+  const handleDragStart = (
+    event: DragEvent<HTMLElement>,
+    projectId: string,
+  ) => {
     event.dataTransfer.effectAllowed = "move";
     event.dataTransfer.setData("project", projectId);
     setDraggingId(projectId);
   };
 
-  const handleDrop = async (event: DragEvent<HTMLElement>, status: P["status"]) => {
+  const handleDrop = async (
+    event: DragEvent<HTMLElement>,
+    status: P["status"],
+  ) => {
     event.preventDefault();
     const projectId = event.dataTransfer.getData("project");
     setOverStatus(null);
@@ -38,7 +44,9 @@ export default function ProjectBoard({ projects }: { projects: P[] }) {
   return (
     <div className="kanban">
       {columns.map((status) => {
-        const columnProjects = projects.filter((project) => project.status === status);
+        const columnProjects = projects.filter(
+          (project) => project.status === status,
+        );
 
         return (
           <section
@@ -51,7 +59,12 @@ export default function ProjectBoard({ projects }: { projects: P[] }) {
               setOverStatus(status);
             }}
             onDragLeave={(event) => {
-              if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setOverStatus(null);
+              if (
+                !event.currentTarget.contains(
+                  event.relatedTarget as Node | null,
+                )
+              )
+                setOverStatus(null);
             }}
             onDrop={(event) => handleDrop(event, status)}
           >
@@ -72,7 +85,11 @@ export default function ProjectBoard({ projects }: { projects: P[] }) {
                   setOverStatus(null);
                 }}
               >
-                <div className="drag-handle" title="Arrastra este proyecto a otra columna" aria-label="Arrastrar proyecto">
+                <div
+                  className="drag-handle"
+                  title="Arrastra este proyecto a otra columna"
+                  aria-label="Arrastrar proyecto"
+                >
                   ⠿
                 </div>
                 <Link href={`/proyectos/${project.id}`}>
@@ -86,7 +103,12 @@ export default function ProjectBoard({ projects }: { projects: P[] }) {
                 <select
                   aria-label={`Estado de ${project.name}`}
                   value={project.status}
-                  onChange={(event) => updateProjectStatus(project.id, event.target.value as P["status"])}
+                  onChange={(event) =>
+                    updateProjectStatus(
+                      project.id,
+                      event.target.value as P["status"],
+                    )
+                  }
                 >
                   <option value="NOT_STARTED">Por iniciar</option>
                   <option value="IN_PROGRESS">En progreso</option>
