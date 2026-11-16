@@ -48,6 +48,7 @@ button { cursor: pointer; }
 .breadcrumb { color: var(--muted); font-size: 12px; font-weight: 700; }
 .top-actions { display: flex; align-items: center; gap: 10px; }
 .money-toggle { min-height: 32px; padding: 0 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--canvas); color: var(--ink); font-size: 10px; font-weight: 800; }
+.money-toggle { display: inline-flex; align-items: center; gap: 6px; }
 .money-toggle:hover, .money-toggle:focus-visible { border-color: #a9c77f; background: var(--lime); outline: 0; box-shadow: 0 0 0 3px rgba(217,250,108,.25); }
 .search-wrap { position: relative; display: flex; align-items: center; }
 .search-wrap > span { position: absolute; left: 14px; color: var(--muted); font-size: 18px; }
@@ -292,4 +293,19 @@ details > summary::-webkit-details-marker { display: none; }
   .table td .pill { justify-self: start; }
   .table td a, .table td strong { min-width: 0; overflow-wrap: break-word; }
   .table-note { text-align: left; }
+}
+
+@media (max-width: 900px) {
+  .top-actions { gap: 6px; }
+  .money-toggle { min-width: 36px; padding: 0 9px; }
+  .money-toggle span { display: none; }
+  .mobile-nav { padding: 7px 8px calc(7px + env(safe-area-inset-bottom)); background: rgba(18,56,47,.98); }
+  .mobile-nav-main { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); width: 100%; gap: 4px; }
+  .mobile-nav a, .mobile-more summary { display: flex; min-height: 52px; align-items: center; justify-content: center; gap: 4px; flex-direction: column; padding: 7px 3px; border: 1px solid transparent; border-radius: 11px; color: rgba(255,255,255,.72); font-size: 9px; font-weight: 700; cursor: pointer; list-style: none; }
+  .mobile-nav a.active, .mobile-more summary:hover, .mobile-more[open] summary { border-color: rgba(217,250,108,.35); background: rgba(217,250,108,.12); color: var(--lime); }
+  .mobile-more summary::-webkit-details-marker { display: none; }
+  .mobile-more { position: relative; }
+  .mobile-more-menu { position: absolute; right: 0; bottom: 62px; display: grid; min-width: 188px; gap: 4px; padding: 8px; border: 1px solid rgba(255,255,255,.12); border-radius: 14px; background: var(--ink); box-shadow: 0 16px 35px rgba(0,0,0,.28); }
+  .mobile-more-menu a { display: flex; min-height: 40px; flex-direction: row; justify-content: flex-start; gap: 10px; padding: 9px 11px; color: #fff; font-size: 12px; }
+  .mobile-more-menu a.active { background: rgba(217,250,108,.16); color: var(--lime); }
 }
