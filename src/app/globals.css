@@ -47,6 +47,8 @@ button { cursor: pointer; }
 .topbar { height: 58px; padding: 0 28px; display: flex; align-items: center; justify-content: space-between; gap: 20px; border-bottom: 1px solid var(--line); background: rgba(255,255,255,.88); backdrop-filter: blur(14px); }
 .breadcrumb { color: var(--muted); font-size: 12px; font-weight: 700; }
 .top-actions { display: flex; align-items: center; gap: 10px; }
+.money-toggle { min-height: 32px; padding: 0 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--canvas); color: var(--ink); font-size: 10px; font-weight: 800; }
+.money-toggle:hover, .money-toggle:focus-visible { border-color: #a9c77f; background: var(--lime); outline: 0; box-shadow: 0 0 0 3px rgba(217,250,108,.25); }
 .search-wrap { position: relative; display: flex; align-items: center; }
 .search-wrap > span { position: absolute; left: 14px; color: var(--muted); font-size: 18px; }
 .search-wrap kbd { position: absolute; right: 8px; padding: 2px 5px; border: 1px solid var(--line); border-radius: 4px; color: var(--muted); font-size: 8px; }
@@ -83,6 +85,9 @@ button { cursor: pointer; }
 .stat strong { display: block; margin-top: 16px; font-size: 37px; font-weight: 800; letter-spacing: -.07em; line-height: 1; }
 .stat small { display: block; margin-top: 8px; color: var(--muted); font-size: 11px; }
 .stat-icon { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 10px; background: var(--soft); color: var(--ink); font-weight: 800; }
+.private-money { display: inline-flex; align-items: center; gap: 7px; min-width: 0; }
+.money-eye { display: inline-grid; place-items: center; width: 24px; height: 24px; padding: 0; border: 1px solid var(--line); border-radius: 7px; background: var(--soft); color: var(--ink); font-size: 12px; line-height: 1; }
+.money-eye:hover, .money-eye:focus-visible { border-color: #a9c77f; background: var(--lime); outline: 0; box-shadow: 0 0 0 3px rgba(217,250,108,.25); }
 .payment-stat strong { font-size: 24px; letter-spacing: -.06em; }
 .expense-balance-card strong { font-size: 25px; letter-spacing: -.06em; }
 .stat-icon.negative { background: #fff0ef; color: var(--danger); }

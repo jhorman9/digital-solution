@@ -3,6 +3,7 @@ import AppShell from "@/app/components/AppShell";
 import { db } from "@/lib/db";
 import { date, money } from "@/lib/labels";
 import { requireAuth } from "@/lib/auth";
+import PrivateMoney from "@/app/components/PrivateMoney";
 
 type Revenue = {
   id: string;
@@ -96,7 +97,7 @@ export default async function ClientRevenuesPage({
           <div className="card stat">
             <div>
               <p>Ingresos hoy</p>
-              <strong>{money(total(periods[0]))}</strong>
+              <strong><PrivateMoney value={money(total(periods[0]))} /></strong>
               <small>Todos los clientes</small>
             </div>
             <span className="stat-icon">$</span>
@@ -104,7 +105,7 @@ export default async function ClientRevenuesPage({
           <div className="card stat">
             <div>
               <p>Esta semana</p>
-              <strong>{money(total(periods[1]))}</strong>
+              <strong><PrivateMoney value={money(total(periods[1]))} /></strong>
               <small>Lunes a domingo</small>
             </div>
             <span className="stat-icon">↗</span>
@@ -112,7 +113,7 @@ export default async function ClientRevenuesPage({
           <div className="card stat">
             <div>
               <p>Este mes</p>
-              <strong>{money(total(periods[2]))}</strong>
+              <strong><PrivateMoney value={money(total(periods[2]))} /></strong>
               <small>Mes actual</small>
             </div>
             <span className="stat-icon">◈</span>
@@ -120,7 +121,7 @@ export default async function ClientRevenuesPage({
           <div className="card stat">
             <div>
               <p>Este año</p>
-              <strong>{money(total(periods[3]))}</strong>
+              <strong><PrivateMoney value={money(total(periods[3]))} /></strong>
               <small>Año actual</small>
             </div>
             <span className="stat-icon">✓</span>
@@ -213,19 +214,19 @@ export default async function ClientRevenuesPage({
                 <div className="payment-company-values">
                   <div>
                     <small>Hoy</small>
-                    <strong>{money(total(clientRows.filter(inToday)))}</strong>
+                    <strong><PrivateMoney value={money(total(clientRows.filter(inToday)))} /></strong>
                   </div>
                   <div>
                     <small>Semana</small>
-                    <strong>{money(total(clientRows.filter(inWeek)))}</strong>
+                    <strong><PrivateMoney value={money(total(clientRows.filter(inWeek)))} /></strong>
                   </div>
                   <div>
                     <small>Mes</small>
-                    <strong>{money(total(clientRows.filter(inMonth)))}</strong>
+                    <strong><PrivateMoney value={money(total(clientRows.filter(inMonth)))} /></strong>
                   </div>
                   <div>
                     <small>Año</small>
-                    <strong>{money(total(clientRows.filter(inYear)))}</strong>
+                    <strong><PrivateMoney value={money(total(clientRows.filter(inYear)))} /></strong>
                   </div>
                 </div>
               </article>
@@ -296,7 +297,7 @@ export default async function ClientRevenuesPage({
                       )}
                     </td>
                     <td data-label="Importe">
-                      <strong>{money(revenue.amount)}</strong>
+                    <strong><PrivateMoney value={money(revenue.amount)} /></strong>
                     </td>
                   </tr>
                 ))}

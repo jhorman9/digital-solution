@@ -3,6 +3,7 @@ import AppShell from "@/app/components/AppShell";
 import { db } from "@/lib/db";
 import { date, money } from "@/lib/labels";
 import { requireAuth } from "@/lib/auth";
+import PrivateMoney from "@/app/components/PrivateMoney";
 
 type Payment = {
   id: string;
@@ -87,7 +88,7 @@ export default async function PersonalPaymentsPage({
           <div className="card stat">
             <div>
               <p>Recibido hoy</p>
-              <strong>{money(total(payments.filter(inToday)))}</strong>
+              <strong><PrivateMoney value={money(total(payments.filter(inToday)))} /></strong>
               <small>Pagos confirmados</small>
             </div>
             <span className="stat-icon">$</span>
@@ -95,7 +96,7 @@ export default async function PersonalPaymentsPage({
           <div className="card stat">
             <div>
               <p>Esta semana</p>
-              <strong>{money(total(payments.filter(inWeek)))}</strong>
+              <strong><PrivateMoney value={money(total(payments.filter(inWeek)))} /></strong>
               <small>Lunes a domingo</small>
             </div>
             <span className="stat-icon">↗</span>
@@ -103,7 +104,7 @@ export default async function PersonalPaymentsPage({
           <div className="card stat">
             <div>
               <p>Este mes</p>
-              <strong>{money(total(payments.filter(inMonth)))}</strong>
+              <strong><PrivateMoney value={money(total(payments.filter(inMonth)))} /></strong>
               <small>Mes actual</small>
             </div>
             <span className="stat-icon">◈</span>
@@ -111,7 +112,7 @@ export default async function PersonalPaymentsPage({
           <div className="card stat">
             <div>
               <p>Este año</p>
-              <strong>{money(total(payments.filter(inYear)))}</strong>
+              <strong><PrivateMoney value={money(total(payments.filter(inYear)))} /></strong>
               <small>Año actual</small>
             </div>
             <span className="stat-icon">✓</span>
@@ -239,7 +240,7 @@ export default async function PersonalPaymentsPage({
                       )}
                     </td>
                     <td data-label="Importe">
-                      <strong>{money(payment.amount)}</strong>
+                      <strong><PrivateMoney value={money(payment.amount)} /></strong>
                     </td>
                     <td data-label="Estado">
                       <span

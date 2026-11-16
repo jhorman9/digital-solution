@@ -4,6 +4,7 @@ import AppShell from "@/app/components/AppShell";
 import { db } from "@/lib/db";
 import { date, money } from "@/lib/labels";
 import { requireAuth } from "@/lib/auth";
+import PrivateMoney from "@/app/components/PrivateMoney";
 
 type Row = {
   id: string;
@@ -175,7 +176,7 @@ export default async function MarketingPage({
           <div className="card stat expense-balance-card">
             <div>
               <p>Saldo hoy</p>
-              <strong>{money(periods[0][1] - periods[0][2])}</strong>
+              <strong><PrivateMoney value={money(periods[0][1] - periods[0][2])} /></strong>
               <small>Ingresos menos marketing</small>
             </div>
             <span className="stat-icon">$</span>
@@ -183,7 +184,7 @@ export default async function MarketingPage({
           <div className="card stat expense-balance-card">
             <div>
               <p>Saldo semana</p>
-              <strong>{money(periods[1][1] - periods[1][2])}</strong>
+              <strong><PrivateMoney value={money(periods[1][1] - periods[1][2])} /></strong>
               <small>Lunes a domingo</small>
             </div>
             <span className="stat-icon">↗</span>
@@ -191,7 +192,7 @@ export default async function MarketingPage({
           <div className="card stat expense-balance-card">
             <div>
               <p>Saldo mes</p>
-              <strong>{money(periods[2][1] - periods[2][2])}</strong>
+              <strong><PrivateMoney value={money(periods[2][1] - periods[2][2])} /></strong>
               <small>Mes actual</small>
             </div>
             <span className="stat-icon">◈</span>
@@ -199,7 +200,7 @@ export default async function MarketingPage({
           <div className="card stat expense-balance-card">
             <div>
               <p>Saldo año</p>
-              <strong>{money(periods[3][1] - periods[3][2])}</strong>
+              <strong><PrivateMoney value={money(periods[3][1] - periods[3][2])} /></strong>
               <small>Año actual</small>
             </div>
             <span className="stat-icon">✓</span>
@@ -208,7 +209,7 @@ export default async function MarketingPage({
         <section className="card financial-callout">
           <div>
             <span className="eyebrow">Resultado operativo</span>
-            <h2>{money(total(confirmed) - total(expenses as Row[]))}</h2>
+            <h2><PrivateMoney value={money(total(confirmed) - total(expenses as Row[]))} /></h2>
             <p>
               Ingresos de clientes confirmados menos inversión de marketing
               registrada.
@@ -216,11 +217,11 @@ export default async function MarketingPage({
           </div>
           <div className="financial-callout-meta">
             <span>
-              Ingresos confirmados <strong>{money(total(confirmed))}</strong>
+              Ingresos confirmados <strong><PrivateMoney value={money(total(confirmed))} /></strong>
             </span>
             <span>
               Marketing gastado{" "}
-              <strong>{money(total(expenses as Row[]))}</strong>
+              <strong><PrivateMoney value={money(total(expenses as Row[]))} /></strong>
             </span>
           </div>
         </section>
@@ -345,19 +346,19 @@ export default async function MarketingPage({
                 <div className="payment-company-values">
                   <div>
                     <small>Hoy</small>
-                    <strong>{money(income[0] - spent[0])}</strong>
+                    <strong><PrivateMoney value={money(income[0] - spent[0])} /></strong>
                   </div>
                   <div>
                     <small>Semana</small>
-                    <strong>{money(income[1] - spent[1])}</strong>
+                    <strong><PrivateMoney value={money(income[1] - spent[1])} /></strong>
                   </div>
                   <div>
                     <small>Mes</small>
-                    <strong>{money(income[2] - spent[2])}</strong>
+                    <strong><PrivateMoney value={money(income[2] - spent[2])} /></strong>
                   </div>
                   <div>
                     <small>Año</small>
-                    <strong>{money(income[3] - spent[3])}</strong>
+                    <strong><PrivateMoney value={money(income[3] - spent[3])} /></strong>
                   </div>
                 </div>
               </article>
@@ -453,8 +454,8 @@ export default async function MarketingPage({
                     </td>
                     <td data-label="Fórmula">
                       {expense.dailyAmount
-                        ? `${money(expense.dailyAmount)} × ${expense.days || 1} día(s)`
-                        : money(expense.amount)}
+                        ? <><PrivateMoney value={money(expense.dailyAmount)} /> × {expense.days || 1} día(s)</>
+                        : <PrivateMoney value={money(expense.amount)} />}
                     </td>
                     <td data-label="Concepto">
                       {expense.concept}
@@ -466,7 +467,7 @@ export default async function MarketingPage({
                       <span className="pill soft-pill">{expense.category}</span>
                     </td>
                     <td data-label="Total">
-                      <strong>{money(expense.amount)}</strong>
+                      <strong><PrivateMoney value={money(expense.amount)} /></strong>
                     </td>
                   </tr>
                 ))}

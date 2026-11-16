@@ -10,6 +10,7 @@ import {
 } from "@/lib/labels";
 import { requireAuth } from "@/lib/auth";
 import AppShell from "./components/AppShell";
+import PrivateMoney from "./components/PrivateMoney";
 
 function dateKey(value: Date | string) {
   if (typeof value === "string") return value.slice(0, 10);
@@ -138,7 +139,7 @@ export default async function Home() {
           <Link href="/pagos" className="card stat payment-stat">
             <div>
               <p>Generado este mes</p>
-              <strong>{money(totalConfirmed(monthPayments))}</strong>
+              <strong><PrivateMoney value={money(totalConfirmed(monthPayments))} /></strong>
               <small>
                 Confirmado · {money(totalConfirmed(todayPayments))} hoy
               </small>
@@ -149,32 +150,26 @@ export default async function Home() {
         <section className="card income-strip">
           <div>
             <span className="eyebrow">Saldo operativo</span>
-            <h2>{money(totalConfirmed(payments) - totalExpenses(expenses))}</h2>
+            <h2><PrivateMoney value={money(totalConfirmed(payments) - totalExpenses(expenses))} /></h2>
             <p>Ingresos confirmados menos gastos de marketing.</p>
           </div>
           <div className="income-periods">
             <div>
               <small>Hoy</small>
               <strong>
-                {money(
-                  totalConfirmed(todayPayments) - totalExpenses(todayExpenses),
-                )}
+                <PrivateMoney value={money(totalConfirmed(todayPayments) - totalExpenses(todayExpenses))} />
               </strong>
             </div>
             <div>
               <small>Semana</small>
               <strong>
-                {money(
-                  totalConfirmed(weekPayments) - totalExpenses(weekExpenses),
-                )}
+                <PrivateMoney value={money(totalConfirmed(weekPayments) - totalExpenses(weekExpenses))} />
               </strong>
             </div>
             <div>
               <small>Mes</small>
               <strong>
-                {money(
-                  totalConfirmed(monthPayments) - totalExpenses(monthExpenses),
-                )}
+                <PrivateMoney value={money(totalConfirmed(monthPayments) - totalExpenses(monthExpenses))} />
               </strong>
             </div>
           </div>

@@ -3,6 +3,7 @@ import AppShell from "@/app/components/AppShell";
 import { db } from "@/lib/db";
 import { date, money } from "@/lib/labels";
 import { requireAuth } from "@/lib/auth";
+import PrivateMoney from "@/app/components/PrivateMoney";
 
 type Expense = {
   id: string;
@@ -161,7 +162,7 @@ export default async function PersonalExpensesPage({
           <div className="card stat expense-balance-card">
             <div>
               <p>Gastado hoy</p>
-              <strong>{money(total(expenses.filter(inToday)))}</strong>
+              <strong><PrivateMoney value={money(total(expenses.filter(inToday)))} /></strong>
               <small>Gastos personales</small>
             </div>
             <span className="stat-icon negative">$</span>
@@ -169,7 +170,7 @@ export default async function PersonalExpensesPage({
           <div className="card stat expense-balance-card">
             <div>
               <p>Esta semana</p>
-              <strong>{money(total(expenses.filter(inWeek)))}</strong>
+              <strong><PrivateMoney value={money(total(expenses.filter(inWeek)))} /></strong>
               <small>Lunes a domingo</small>
             </div>
             <span className="stat-icon negative">↗</span>
@@ -177,7 +178,7 @@ export default async function PersonalExpensesPage({
           <div className="card stat expense-balance-card">
             <div>
               <p>Este mes</p>
-              <strong>{money(total(expenses.filter(inMonth)))}</strong>
+              <strong><PrivateMoney value={money(total(expenses.filter(inMonth)))} /></strong>
               <small>Mes actual</small>
             </div>
             <span className="stat-icon negative">◈</span>
@@ -185,7 +186,7 @@ export default async function PersonalExpensesPage({
           <div className="card stat expense-balance-card">
             <div>
               <p>Este año</p>
-              <strong>{money(total(expenses.filter(inYear)))}</strong>
+              <strong><PrivateMoney value={money(total(expenses.filter(inYear)))} /></strong>
               <small>Año actual</small>
             </div>
             <span className="stat-icon negative">✓</span>
@@ -194,7 +195,7 @@ export default async function PersonalExpensesPage({
         <section className="card financial-callout">
           <div>
             <span className="eyebrow">Gasto personal acumulado</span>
-            <h2>{money(total(expenses))}</h2>
+            <h2><PrivateMoney value={money(total(expenses))} /></h2>
             <p>
               Esta cifra no se mezcla con la inversión de marketing de tus
               clientes.
@@ -205,7 +206,7 @@ export default async function PersonalExpensesPage({
               Registros <strong>{expenses.length}</strong>
             </span>
             <span>
-              Este mes <strong>{money(total(expenses.filter(inMonth)))}</strong>
+              Este mes <strong><PrivateMoney value={money(total(expenses.filter(inMonth)))} /></strong>
             </span>
           </div>
         </section>
@@ -272,7 +273,7 @@ export default async function PersonalExpensesPage({
                     </td>
                     <td data-label="Notas">{expense.notes || "—"}</td>
                     <td data-label="Importe">
-                      <strong>{money(expense.amount)}</strong>
+                      <strong><PrivateMoney value={money(expense.amount)} /></strong>
                     </td>
                   </tr>
                 ))}

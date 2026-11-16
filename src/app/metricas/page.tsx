@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import { date, money } from "@/lib/labels";
 import AppShell from "../components/AppShell";
 import MetricForm from "./metric-form";
+import PrivateMoney from "../components/PrivateMoney";
 
 export default async function Metricas({
   searchParams,
@@ -65,7 +66,7 @@ export default async function Metricas({
           <div className="card stat">
             <div>
               <p>Inversión</p>
-              <strong>{money(total("investment"))}</strong>
+                <strong><PrivateMoney value={money(total("investment"))} /></strong>
             </div>
             <span className="stat-icon">$</span>
           </div>
@@ -177,7 +178,7 @@ export default async function Metricas({
                         </td>
                         <td data-label="Campaña">{metric.name}</td>
                         <td data-label="Inversión">
-                          {money(metric.investment)}
+                          <PrivateMoney value={money(metric.investment)} />
                         </td>
                         <td data-label="Impresiones">
                           {Number(metric.impressions || 0).toLocaleString(
@@ -185,7 +186,7 @@ export default async function Metricas({
                           )}
                         </td>
                         <td data-label="CTR">{ctr}</td>
-                        <td data-label="Coste / resultado">{cpr}</td>
+                        <td data-label="Coste / resultado">{cpr === "—" || cpr === "â€”" ? "—" : <PrivateMoney value={cpr} />}</td>
                       </tr>
                     );
                   })}
