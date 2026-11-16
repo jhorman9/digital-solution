@@ -1,6 +1,6 @@
 # Digital Solutions · Operations
 
-Panel privado en español para gestionar clientes, proyectos, tareas, entregas, seguimientos, plantillas, métricas y pagos confirmados.
+Panel privado en español para gestionar clientes, proyectos, tareas, entregas, seguimientos, plantillas, métricas, ingresos y marketing.
 
 ## Configuración local
 
@@ -14,7 +14,7 @@ La aplicación usa `America/Panama`, formato `es-PA` y USD. El acceso es de un s
 
 ## Pagos
 
-En `/pagos` puedes registrar pagos por empresa, asociarlos opcionalmente a un proyecto, marcarlos como pendientes o confirmados y consultar totales confirmados del día, semana, mes y acumulado. En `/gastos` puedes registrar en qué se utilizó el dinero y consultar el saldo operativo como ingresos confirmados menos gastos. También se muestra el desglose y los saldos por periodo en Resumen.
+En `/pagos` puedes registrar ingresos de clientes por empresa, asociarlos opcionalmente a un proyecto, marcarlos como pendientes o confirmados y consultar los totales recibidos. En `/pagos-personales` registras los pagos que te han realizado directamente a ti. En `/marketing` registras cuánto inviertes por empresa y proyecto usando la fórmula importe diario × cantidad de días (por ejemplo, USD 20 × 7 = USD 140). Marketing calcula sumas diarias, semanales, mensuales y anuales y el saldo de ingresos confirmados menos marketing. En `/gastos` registras únicamente tus gastos personales; no tienen empresa/proyecto y no se mezclan con marketing.
 
 ## Comprobaciones
 

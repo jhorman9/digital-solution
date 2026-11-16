@@ -20,6 +20,13 @@ const templates = [
 async function main() {
   const sql = await fs.readFile(path.join(process.cwd(), "schema.sql"), "utf8");
   for (const statement of sql.split(";").map((value) => value.trim()).filter(Boolean)) await pool.query(statement);
+  const [expenseColumns] = await pool.query<any[]>("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='expenses'");
+  const existingExpenseColumns = new Set(expenseColumns.map((column: any) => column.COLUMN_NAME));
+  for (const [column, definition] of [["clientId", "VARCHAR(36) NULL"], ["projectId", "VARCHAR(36) NULL"], ["dailyAmount", "DECIMAL(12,2) NULL"], ["days", "INT NULL"]] as const) if (!existingExpenseColumns.has(column)) await pool.query(`ALTER TABLE expenses ADD COLUMN ${column} ${definition}`);
+  const [paymentColumns] = await pool.query<any[]>("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='payments'");
+  const existingPaymentColumns = new Set(paymentColumns.map((column: any) => column.COLUMN_NAME));
+  if (existingPaymentColumns.has("clientId")) await pool.query("ALTER TABLE payments MODIFY COLUMN clientId VARCHAR(36) NULL");
+  if (!existingPaymentColumns.has("paymentType")) await pool.query("ALTER TABLE payments ADD COLUMN paymentType VARCHAR(30) NOT NULL DEFAULT 'CLIENT_INCOME' AFTER projectId");
   const names = ["The Color Bar Salon", "Cocolpan", "Azumi", "Divino Pekado", "Utah Mechanical School", "Aikikai"];
   for (const name of names) { const [rows] = await pool.query<any[]>("SELECT id FROM clients WHERE name=? LIMIT 1", [name]); if (!rows.length) await pool.query("INSERT INTO clients (id,name) VALUES (?,?)", [crypto.randomUUID(), name]); }
   for (const [name, service, items] of templates) { const [rows] = await pool.query<any[]>("SELECT id FROM checklistTemplates WHERE service=? LIMIT 1", [service]); if (!rows.length) { const id = crypto.randomUUID(); await pool.query("INSERT INTO checklistTemplates (id,name,service) VALUES (?,?,?)", [id, name, service]); for (const [position, title] of items.entries()) await pool.query("INSERT INTO checklistTemplateItems (id,templateId,title,position) VALUES (?,?,?,?)", [crypto.randomUUID(), id, title, position]); } }

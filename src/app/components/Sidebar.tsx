@@ -3,25 +3,26 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const items = [
-  ["Resumen", "/", "▦"],
-  ["Proyectos", "/proyectos", "▥"],
-  ["Clientes", "/clientes", "♧"],
-  ["Pagos", "/pagos", "$"],
-  ["Gastos", "/gastos", "−"],
-  ["Métricas", "/metricas", "▥"],
-  ["Plantillas", "/plantillas", "▤"],
+type NavItem = readonly [string, string, string];
+type NavSection = { label: string; items: readonly NavItem[] };
+
+const sections: readonly NavSection[] = [
+  { label: "Personal", items: [["Pagos", "/pagos-personales", "$"], ["Gastos", "/gastos", "−"]] },
+  { label: "Clientes", items: [["Ingresos", "/ingresos-clientes", "$"], ["Publicidad", "/marketing", "◈"]] },
+  { label: "Operación", items: [["Resumen", "/", "▦"], ["Proyectos", "/proyectos", "▥"], ["Métricas", "/metricas", "▥"], ["Plantillas", "/plantillas", "▤"]] },
 ] as const;
+
+const allItems = sections.flatMap((section) => section.items);
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const isActive = (href: string) => href === "/" ? pathname === "/" : pathname.startsWith(href);
   return <>
     <aside className="sidebar">
       <Link href="/" className="brand brand-mark"><span className="brand-logo">↗</span><span className="brand-copy"><strong>Digital Solutions</strong><small>Espacio de trabajo</small></span></Link>
-      <div className="eyebrow sidebar-label">Operación</div>
-      <nav className="nav" aria-label="Navegación principal">{items.map(([label, href, icon]) => { const active = href === "/" ? pathname === "/" : pathname.startsWith(href); return <Link className={active ? "active" : ""} href={href} key={href}><span className="nav-icon">{icon}</span>{label}</Link>; })}</nav>
+      <nav className="nav grouped-nav" aria-label="Navegación principal">{sections.map((section) => <div className="nav-group" key={section.label}><div className="eyebrow sidebar-label">{section.label}</div>{section.items.map(([label, href, icon]) => <Link className={isActive(href) ? "active" : ""} href={href} key={href}><span className="nav-icon">{icon}</span>{label}</Link>)}</div>)}</nav>
       <div className="sidebar-foot"><small>Guardado en este navegador</small><div className="profile"><strong>JN</strong><span><b>Jhorman Nieto</b><small>Digital Solutions</small></span></div></div>
     </aside>
-    <nav className="mobile-nav" aria-label="Navegación móvil">{items.slice(0, 5).map(([label, href]) => <Link href={href} key={href}>{label}</Link>)}</nav>
+    <nav className="mobile-nav" aria-label="Navegación móvil">{allItems.slice(0, 5).map(([label, href]) => <Link className={isActive(href) ? "active" : ""} href={href} key={href}>{label}</Link>)}</nav>
   </>;
 }
