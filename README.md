@@ -14,7 +14,7 @@ La aplicación usa `America/Panama`, formato `es-PA` y USD. El acceso es de un s
 
 ## Pagos
 
-En `/pagos` puedes registrar pagos por empresa, asociarlos opcionalmente a un proyecto, marcarlos como pendientes o confirmados y consultar totales confirmados del día, semana, mes y acumulado. También se muestra el desglose por empresa y el total mensual en Resumen.
+En `/pagos` puedes registrar pagos por empresa, asociarlos opcionalmente a un proyecto, marcarlos como pendientes o confirmados y consultar totales confirmados del día, semana, mes y acumulado. En `/gastos` puedes registrar en qué se utilizó el dinero y consultar el saldo operativo como ingresos confirmados menos gastos. También se muestra el desglose y los saldos por periodo en Resumen.
 
 ## Comprobaciones
 

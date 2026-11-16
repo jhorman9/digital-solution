@@ -8,6 +8,7 @@ const items = [
   ["Proyectos", "/proyectos", "▥"],
   ["Clientes", "/clientes", "♧"],
   ["Pagos", "/pagos", "$"],
+  ["Gastos", "/gastos", "−"],
   ["Métricas", "/metricas", "▥"],
   ["Plantillas", "/plantillas", "▤"],
 ] as const;
