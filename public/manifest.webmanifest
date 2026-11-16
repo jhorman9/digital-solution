@@ -1,0 +1,13 @@
+{
+  "name": "Digital Solutions · Operaciones",
+  "short_name": "Digital Solutions",
+  "description": "Panel privado de operaciones de Digital Solutions",
+  "lang": "es-PA",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f7f8f5",
+  "theme_color": "#12382f",
+  "icons": [{ "src": "/icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}

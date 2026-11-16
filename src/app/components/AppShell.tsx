@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { isAuthenticated, logout } from "@/lib/auth";
 import Sidebar from "./Sidebar";
 import { MoneyVisibilityProvider, MoneyVisibilityToggle } from "./MoneyVisibility";
+import PwaInstallButton from "./PwaInstallButton";
 
 export default async function AppShell({ children }: { children: React.ReactNode }) {
   if (!(await isAuthenticated())) redirect("/login");
@@ -14,6 +15,7 @@ export default async function AppShell({ children }: { children: React.ReactNode
           <span className="breadcrumb">Espacio de trabajo <i>/</i> Operación</span>
           <div className="top-actions">
             <MoneyVisibilityToggle />
+            <PwaInstallButton />
             <label className="search-wrap">
               <span aria-hidden="true">⌕</span>
               <input className="search" aria-label="Búsqueda global" placeholder="Buscar en el espacio..." />
