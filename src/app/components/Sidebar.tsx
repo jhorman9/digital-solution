@@ -3,14 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { LucideIcon } from "lucide-react";
-import { BarChart3, BriefcaseBusiness, CircleDollarSign, LayoutDashboard, Megaphone, Receipt, Settings2, WalletCards } from "lucide-react";
+import { BarChart3, BriefcaseBusiness, Building2, CircleDollarSign, LayoutDashboard, Megaphone, Receipt, Settings2, WalletCards } from "lucide-react";
 
 type NavItem = readonly [string, string, LucideIcon];
 type NavSection = { label: string; items: readonly NavItem[] };
 
 const sections: readonly NavSection[] = [
   { label: "Personal", items: [["Ingresos", "/ingresos-personales", CircleDollarSign], ["Gastos", "/gastos", Receipt]] },
-  { label: "Clientes", items: [["Ingresos", "/ingresos-clientes", WalletCards], ["Publicidad", "/marketing", Megaphone]] },
+  { label: "Clientes", items: [["Empresas", "/clientes", Building2], ["Ingresos", "/ingresos-clientes", WalletCards], ["Publicidad", "/marketing", Megaphone]] },
   { label: "Operación", items: [["Resumen", "/", LayoutDashboard], ["Proyectos", "/proyectos", BriefcaseBusiness], ["Métricas", "/metricas", BarChart3], ["Plantillas", "/plantillas", Settings2]] },
 ] as const;
 

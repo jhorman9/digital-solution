@@ -42,7 +42,7 @@ async function enrichProject(p: RowDataPacket, include?: Record<string, unknown>
 export const db: DbAdapter = {
   client: {
     count: async ({ where = {} }: { where?: Where } = {}) => { const clause = where.archived === false ? "WHERE archived=0" : ""; const [r] = await pool.query<RowDataPacket[]>(`SELECT COUNT(*) count FROM clients ${clause}`); return Number(r[0].count); },
-    findMany: async ({ where = {}, include }: { where?: Where; include?: Record<string, unknown> } = {}) => { const clause = where.archived === false ? "WHERE archived=0" : ""; const [r] = await pool.query<RowDataPacket[]>(`SELECT * FROM clients ${clause} ORDER BY name`); for (const c of r) if (include?._count) { const [n] = await pool.query<RowDataPacket[]>("SELECT COUNT(*) count FROM projects WHERE clientId=?", [c.id]); c._count = { projects: Number(n[0].count) }; } return r; },
+    findMany: async ({ where = {}, include }: { where?: Where; include?: Record<string, unknown> } = {}) => { const clause = typeof where.archived === "boolean" ? `WHERE archived=${where.archived ? 1 : 0}` : ""; const [r] = await pool.query<RowDataPacket[]>(`SELECT * FROM clients ${clause} ORDER BY name`); for (const c of r) if (include?._count) { const [n] = await pool.query<RowDataPacket[]>("SELECT COUNT(*) count FROM projects WHERE clientId=?", [c.id]); c._count = { projects: Number(n[0].count) }; } return r; },
     create: async ({ data }: { data: Record<string, unknown> }) => { const id = crypto.randomUUID(); await pool.query("INSERT INTO clients (id,name,contactName,email,phone,website,notes,archived) VALUES (?,?,?,?,?,?,?,0)", [id, data.name, data.contactName || null, data.email || null, data.phone || null, data.website || null, data.notes || null]); return { id }; }
   },
   project: {

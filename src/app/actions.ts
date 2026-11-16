@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import type { RowDataPacket } from "mysql2/promise";
 import { db, pool } from "@/lib/db";
 import { requireAuth } from "@/lib/auth";
 
@@ -71,6 +72,37 @@ export async function archiveClient(form: FormData) {
   const id = idSchema.parse(text(form.get("id")));
   await pool.query("UPDATE clients SET archived=1 WHERE id=?", [id]);
   revalidatePath("/clientes");
+}
+
+export async function restoreClient(form: FormData) {
+  await requireAuth();
+  const id = idSchema.parse(text(form.get("id")));
+  await pool.query("UPDATE clients SET archived=0 WHERE id=?", [id]);
+  revalidatePath("/clientes");
+  revalidatePath("/proyectos");
+}
+
+export async function deleteClient(form: FormData) {
+  await requireAuth();
+  const id = idSchema.parse(text(form.get("id")));
+  const [rows] = await pool.query<RowDataPacket[]>(
+    `SELECT
+      (SELECT COUNT(*) FROM projects WHERE clientId=?) AS projects,
+      (SELECT COUNT(*) FROM payments WHERE clientId=?) AS payments,
+      (SELECT COUNT(*) FROM clientRevenues WHERE clientId=?) AS revenues,
+      (SELECT COUNT(*) FROM expenses WHERE clientId=?) AS marketing`,
+    [id, id, id, id],
+  );
+  const related = rows[0];
+  if (related && Object.values(related).some((value) => Number(value) > 0)) {
+    redirect(`/clientes?error=${encodeURIComponent("No se puede eliminar una empresa con historial. Archívala para conservar sus proyectos y movimientos.")}`);
+  }
+  await pool.query("DELETE FROM clients WHERE id=?", [id]);
+  revalidatePath("/clientes");
+  revalidatePath("/proyectos");
+  revalidatePath("/ingresos-clientes");
+  revalidatePath("/marketing");
+  revalidatePath("/");
 }
 
 export async function createProject(form: FormData) {
