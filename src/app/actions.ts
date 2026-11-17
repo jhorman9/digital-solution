@@ -150,6 +150,37 @@ export async function updateProjectStatus(
   revalidatePath("/proyectos");
   revalidatePath(`/proyectos/${id}`);
 }
+
+export async function updateProjectName(id: string, name: string) {
+  await requireAuth();
+  const projectId = idSchema.parse(id);
+  const nextName = z.string().min(2).max(180).parse(name.trim());
+  await pool.query("UPDATE projects SET name=? WHERE id=?", [nextName, projectId]);
+  await pool.query("INSERT INTO histories (id,projectId,type,description,date) VALUES (?,?,?,?,NOW())", [crypto.randomUUID(), projectId, "UPDATED", `Título cambiado a ${nextName}`]);
+  revalidatePath("/proyectos");
+  revalidatePath(`/proyectos/${projectId}`);
+  revalidatePath("/");
+  return { ok: true };
+}
+
+export async function deleteProject(id: string) {
+  await requireAuth();
+  const projectId = idSchema.parse(id);
+  const [rows] = await pool.query<RowDataPacket[]>(`SELECT
+    (SELECT COUNT(*) FROM tasks WHERE projectId=?) +
+    (SELECT COUNT(*) FROM checklistItems WHERE projectId=?) +
+    (SELECT COUNT(*) FROM deliverables WHERE projectId=?) +
+    (SELECT COUNT(*) FROM followUps WHERE projectId=?) +
+    (SELECT COUNT(*) FROM changeRequests WHERE projectId=?) +
+    (SELECT COUNT(*) FROM resources WHERE projectId=?) +
+    (SELECT COUNT(*) FROM histories WHERE projectId=?) +
+    (SELECT COUNT(*) FROM metrics WHERE projectId=?) AS related`, [projectId, projectId, projectId, projectId, projectId, projectId, projectId, projectId]);
+  if (Number(rows[0]?.related || 0) > 0) return { ok: false, error: "Este proyecto tiene historial o trabajo relacionado. Archívalo para conservar esos datos." };
+  await pool.query("DELETE FROM projects WHERE id=?", [projectId]);
+  revalidatePath("/proyectos");
+  revalidatePath("/");
+  return { ok: true };
+}
 export async function updateProjectPhase(form: FormData) {
   await requireAuth();
   const id = idSchema.parse(text(form.get("projectId")));

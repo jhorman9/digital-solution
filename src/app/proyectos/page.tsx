@@ -11,6 +11,7 @@ import {
 import AppShell from "../components/AppShell";
 import ProjectBoard from "./ProjectBoard";
 import Pagination from "../components/Pagination";
+import ProjectActions from "./ProjectActions";
 
 export default async function Proyectos({
   searchParams,
@@ -51,7 +52,10 @@ export default async function Proyectos({
   });
   const page = Math.max(1, Number(q.page) || 1);
   const pageSize = 10;
-  const visibleProjects = projects.slice((page - 1) * pageSize, page * pageSize);
+  const visibleProjects = projects.slice(
+    (page - 1) * pageSize,
+    page * pageSize,
+  );
   return (
     <AppShell>
       <div className="content">
@@ -136,6 +140,7 @@ export default async function Proyectos({
                     <th scope="col">Prioridad</th>
                     <th scope="col">Estado</th>
                     <th scope="col">Entrega</th>
+                    <th scope="col">Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -173,6 +178,9 @@ export default async function Proyectos({
                         </span>
                       </td>
                       <td data-label="Entrega">{date(project.dueDate)}</td>
+                      <td data-label="Acciones">
+                        <ProjectActions id={project.id} name={project.name} />
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -182,7 +190,18 @@ export default async function Proyectos({
             <div className="empty">No hay proyectos con estos filtros.</div>
           )}
         </div>
-        <Pagination page={page} total={projects.length} basePath="/proyectos" query={{ client: q.client, service: q.service, status: q.status, priority: q.priority, view: q.view }} />
+        <Pagination
+          page={page}
+          total={projects.length}
+          basePath="/proyectos"
+          query={{
+            client: q.client,
+            service: q.service,
+            status: q.status,
+            priority: q.priority,
+            view: q.view,
+          }}
+        />
       </div>
     </AppShell>
   );

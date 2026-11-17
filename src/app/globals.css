@@ -291,6 +291,7 @@ details > summary::-webkit-details-marker { display: none; }
 .push-status { color: var(--muted); font-size: 11px; }
 .sidebar-settings { display: flex; align-items: center; gap: 10px; margin: 10px 14px 0; padding: 10px 12px; border-radius: 9px; color: var(--muted); font-size: 12px; }
 .sidebar-settings:hover, .sidebar-settings.active { background: var(--soft); color: var(--ink); font-weight: 800; }
+.projects-hidden a[href="/proyectos"] { display: none; }
 .settings-card { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 24px; }
 .settings-card-copy { display: flex; align-items: flex-start; gap: 14px; }
 .settings-icon { display: grid; width: 42px; height: 42px; place-items: center; flex: 0 0 42px; border-radius: 12px; background: var(--soft); font-size: 19px; }
@@ -309,6 +310,11 @@ details > summary::-webkit-details-marker { display: none; }
 .field-help { color: var(--muted); font-size: 10px; }
 .appearance-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .success-text { color: #287249; font-size: 12px; font-weight: 700; }
+.setting-check { display: flex; align-items: center; gap: 8px; color: var(--ink); font-size: 12px; font-weight: 700; }
+.setting-check input { width: 18px; height: 18px; accent-color: var(--ink); }
+.project-actions { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+.danger-button { border-color: #f0cfcd; color: var(--danger); }
+.danger-button:hover { border-color: var(--danger); background: #fff0ef; }
 
 @media (max-width: 1200px) { .template-grid, .client-grid, .summary-project-grid { grid-template-columns: repeat(3, minmax(0,1fr)); } }
 @media (max-width: 1100px) { .stats-four, .stats-five { grid-template-columns: repeat(2, minmax(0,1fr)); } .kanban { grid-template-columns: repeat(4, 260px); } .template-grid, .client-grid, .summary-project-grid { grid-template-columns: repeat(2, minmax(0,1fr)); } .payment-company-grid { grid-template-columns: repeat(2, minmax(0,1fr)); } }
