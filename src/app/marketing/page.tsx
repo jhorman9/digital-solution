@@ -6,6 +6,7 @@ import { date, money } from "@/lib/labels";
 import { requireAuth } from "@/lib/auth";
 import PrivateMoney from "@/app/components/PrivateMoney";
 import Pagination from "@/app/components/Pagination";
+import CampaignDatePreview from "./CampaignDatePreview";
 
 type Row = {
   id: string;
@@ -21,6 +22,7 @@ type Row = {
   client?: { name: string } | null;
   project?: { name: string } | null;
 };
+type CampaignStatus = "ACTIVE" | "DUE_TOMORROW" | "EXPIRED";
 type Payment = {
   clientId: string;
   paymentDate: Date | string;
@@ -50,6 +52,15 @@ function total(rows: Array<{ amount: number | string }>) {
 }
 function within(key: string, from: string, to: string) {
   return key >= from && key <= to;
+}
+function campaignEnd(row: Row) {
+  return addDays(dateKey(row.expenseDate), Math.max(1, Number(row.days || 1)) - 1);
+}
+function campaignStatus(row: Row, today: string): CampaignStatus {
+  const end = campaignEnd(row);
+  if (end < today) return "EXPIRED";
+  if (end === addDays(today, 1)) return "DUE_TOMORROW";
+  return "ACTIVE";
 }
 
 export default async function MarketingPage({
@@ -271,6 +282,9 @@ export default async function MarketingPage({
                 required
               />
             </div>
+            <div className="field full">
+              <CampaignDatePreview />
+            </div>
             <div className="field">
               <label htmlFor="category">Plataforma o categoría *</label>
               <input
@@ -370,6 +384,11 @@ export default async function MarketingPage({
           </div>
         </section>
         <section className="card table-card expense-table-card">
+          {(() => {
+            const dueTomorrow = (expenses as Row[]).filter((expense) => campaignStatus(expense, today) === "DUE_TOMORROW").length;
+            const expired = (expenses as Row[]).filter((expense) => campaignStatus(expense, today) === "EXPIRED").length;
+            return dueTomorrow || expired ? <div className="campaign-alert" role="status">{dueTomorrow > 0 && <span className="pill amber">{dueTomorrow} publicidad vence mañana</span>}{expired > 0 && <span className="pill danger-pill">{expired} publicidad vencida</span>}</div> : null;
+          })()}
           <div className="card-heading">
             <div>
               <h2 className="section-title">Gastos de marketing</h2>
@@ -438,18 +457,21 @@ export default async function MarketingPage({
               <thead>
                 <tr>
                   <th>Fecha</th>
+                  <th>Finaliza</th>
                   <th>Empresa</th>
                   <th>Proyecto</th>
                   <th>Fórmula</th>
                   <th>Concepto</th>
                   <th>Categoría</th>
                   <th>Total</th>
+                  <th>Estado</th>
                 </tr>
               </thead>
               <tbody>
                 {visibleExpenses.map((expense) => (
                   <tr key={expense.id}>
                     <td data-label="Fecha">{date(expense.expenseDate)}</td>
+                    <td data-label="Finaliza">{date(campaignEnd(expense))}</td>
                     <td data-label="Empresa">
                       <strong>{expense.client?.name || "Sin empresa"}</strong>
                     </td>
@@ -473,11 +495,14 @@ export default async function MarketingPage({
                     <td data-label="Total">
                       <strong><PrivateMoney value={money(expense.amount)} /></strong>
                     </td>
+                    <td data-label="Estado">
+                      {campaignStatus(expense, today) === "EXPIRED" ? <span className="pill danger-pill">Vencido</span> : campaignStatus(expense, today) === "DUE_TOMORROW" ? <span className="pill amber">Vence mañana</span> : <span className="pill green">Activo</span>}
+                    </td>
                   </tr>
                 ))}
                 {!filtered.length && (
                   <tr>
-                    <td colSpan={7}>
+                    <td colSpan={9}>
                       <div className="empty">
                         No hay gastos de marketing para los filtros
                         seleccionados.

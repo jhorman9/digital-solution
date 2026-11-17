@@ -77,6 +77,9 @@ button { cursor: pointer; }
 .install-button { gap: 7px; }
 .pagination { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 18px; color: var(--muted); font-size: 12px; }
 .disabled-button { cursor: not-allowed; opacity: .45; pointer-events: none; }
+.campaign-date-preview { margin: 0; color: var(--muted); font-size: 12px; }
+.campaign-alert { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 20px 14px; }
+.danger-pill { background: #fff0ef; color: var(--danger); }
 
 .grid { display: grid; gap: 18px; }
 .stats { grid-template-columns: repeat(3, minmax(0,1fr)); margin-bottom: 24px; }
