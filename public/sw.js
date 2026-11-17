@@ -1,4 +1,4 @@
-const CACHE_NAME = "digital-solutions-shell-v1";
+const CACHE_NAME = "digital-solutions-shell-v2";
 const APP_SHELL = ["/", "/login", "/manifest.webmanifest", "/icons/icon.svg"];
 
 self.addEventListener("install", (event) => {
