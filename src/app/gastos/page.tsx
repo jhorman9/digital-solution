@@ -108,7 +108,7 @@ export default async function PersonalExpensesPage({
                 />
               </div>
               <div className="field">
-                <label htmlFor="amount">Importe USD *</label>
+                <label htmlFor="amount">Importe ($) *</label>
                 <input
                   id="amount"
                   name="amount"
@@ -286,6 +286,7 @@ export default async function PersonalExpensesPage({
                       <div className="empty">
                         Todavía no hay gastos personales registrados.
         </div>
+        <Pagination page={page} total={filtered.length} basePath="/gastos" query={{ category: params.category, period: params.period }} />
                     </td>
                   </tr>
                 )}
@@ -293,7 +294,6 @@ export default async function PersonalExpensesPage({
             </table>
           </div>
         </section>
-        <Pagination page={page} total={filtered.length} basePath="/gastos" query={{ category: params.category, period: params.period }} />
       </div>
     </AppShell>
   );

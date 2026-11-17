@@ -234,7 +234,7 @@ export default async function MarketingPage({
             <div>
               <h2 className="section-title">Registrar marketing</h2>
               <p className="subtitle">
-                Ejemplo: USD 20 diarios durante 7 días = USD 140.
+                Ejemplo: $ 20 diarios durante 7 días = $ 140.
               </p>
             </div>
           </div>
@@ -281,7 +281,7 @@ export default async function MarketingPage({
               />
             </div>
             <div className="field">
-              <label htmlFor="dailyAmount">Gasto diario USD *</label>
+              <label htmlFor="dailyAmount">Gasto diario $ *</label>
               <input
                 id="dailyAmount"
                 name="dailyAmount"

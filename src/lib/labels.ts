@@ -39,4 +39,5 @@ export const date = (value: Date | string | number) => new Intl.DateTimeFormat("
 export const money = (value: number | string | null | undefined) => new Intl.NumberFormat("es-PA", {
   style: "currency",
   currency: "USD",
+  currencyDisplay: "narrowSymbol",
 }).format(Number(value || 0));

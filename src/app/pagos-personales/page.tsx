@@ -142,7 +142,7 @@ export default async function PersonalPaymentsPage({
               />
             </div>
             <div className="field">
-              <label htmlFor="amount">Importe USD *</label>
+              <label htmlFor="amount">Importe $ *</label>
               <input
                 id="amount"
                 name="amount"
