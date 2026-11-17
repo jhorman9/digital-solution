@@ -40,6 +40,7 @@ const projectSchema = z.object({
   dueDate: z.coerce.date(),
 });
 const idSchema = z.string().uuid();
+const calendarDateSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Fecha inválida");
 
 export async function createClient(form: FormData) {
   await requireAuth();
@@ -197,7 +198,7 @@ const paymentSchema = z.object({
     (value) => (value === "" ? undefined : value),
     idSchema.optional(),
   ),
-  paymentDate: z.coerce.date(),
+  paymentDate: calendarDateSchema,
   amount: z.coerce.number().positive(),
   concept: z.string().min(2),
   status: z.enum(["PENDING", "CONFIRMED"]),
@@ -214,7 +215,7 @@ export async function createPayment(form: FormData) {
 }
 const clientRevenueSchema = z.object({
   clientId: idSchema,
-  revenueDate: z.coerce.date(),
+  revenueDate: calendarDateSchema,
   amount: z.coerce.number().positive(),
   concept: z.string().min(2),
   notes: z.string().optional(),
@@ -227,7 +228,7 @@ export async function createClientRevenue(form: FormData) {
   revalidatePath("/");
 }
 const personalPaymentSchema = z.object({
-  paymentDate: z.coerce.date(),
+  paymentDate: calendarDateSchema,
   amount: z.coerce.number().positive(),
   concept: z.string().min(2),
   status: z.enum(["PENDING", "CONFIRMED"]),
@@ -237,7 +238,7 @@ export async function createPersonalPayment(form: FormData) {
   await requireAuth();
   const data = personalPaymentSchema.parse(Object.fromEntries(form));
   await db.payment.create({ data: { ...data, paymentType: "PERSONAL" } });
-  revalidatePath("/pagos");
+  revalidatePath("/pagos-personales");
   revalidatePath("/");
 }
 export async function confirmPayment(form: FormData) {
@@ -247,7 +248,7 @@ export async function confirmPayment(form: FormData) {
     .enum(["PENDING", "CONFIRMED"])
     .parse(text(form.get("status")));
   await db.payment.updateStatus({ where: { id }, status });
-  revalidatePath("/pagos");
+  revalidatePath("/pagos-personales");
   revalidatePath("/");
 }
 
@@ -257,7 +258,7 @@ const expenseSchema = z.object({
     (value) => (value === "" ? undefined : value),
     idSchema.optional(),
   ),
-  expenseDate: z.coerce.date(),
+  expenseDate: calendarDateSchema,
   dailyAmount: z.coerce.number().positive(),
   days: z.coerce.number().int().min(1).max(366),
   category: z.string().min(2),
@@ -276,7 +277,7 @@ export async function createExpense(form: FormData) {
   revalidatePath("/");
 }
 const personalExpenseSchema = z.object({
-  expenseDate: z.coerce.date(),
+  expenseDate: calendarDateSchema,
   amount: z.coerce.number().positive(),
   category: z.string().min(2),
   concept: z.string().min(2),

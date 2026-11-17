@@ -31,10 +31,16 @@ export const serviceOptions = [
   "Conexiones vía API",
 ] as const;
 
-export const date = (value: Date | string | number) => new Intl.DateTimeFormat("es-PA", {
-  dateStyle: "medium",
-  timeZone: "America/Panama",
-}).format(new Date(value));
+export const date = (value: Date | string | number) => {
+  const raw = String(value);
+  const calendarValue = /^\d{4}-\d{2}-\d{2}$/.test(raw)
+    ? new Date(`${raw}T12:00:00Z`)
+    : new Date(value);
+  return new Intl.DateTimeFormat("es-PA", {
+    dateStyle: "medium",
+    timeZone: "America/Panama",
+  }).format(calendarValue);
+};
 
 export const money = (value: number | string | null | undefined) => new Intl.NumberFormat("es-PA", {
   style: "currency",
