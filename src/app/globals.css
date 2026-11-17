@@ -313,6 +313,7 @@ details > summary::-webkit-details-marker { display: none; }
 .setting-check { display: flex; align-items: center; gap: 8px; color: var(--ink); font-size: 12px; font-weight: 700; }
 .setting-check input { width: 18px; height: 18px; accent-color: var(--ink); }
 .project-actions { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+.project-archive-toolbar { display: flex; justify-content: flex-end; margin: -8px 0 10px; }
 .danger-button { border-color: #f0cfcd; color: var(--danger); }
 .danger-button:hover { border-color: var(--danger); background: #fff0ef; }
 

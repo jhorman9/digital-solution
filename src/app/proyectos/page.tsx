@@ -22,12 +22,14 @@ export default async function Proyectos({
     status?: string;
     priority?: string;
     view?: string;
+    archived?: string;
     page?: string;
   }>;
 }) {
   const q = await searchParams;
   const [allProjects, clients] = await Promise.all([
     db.project.findMany({
+      where: q.archived === "1" ? { archived: true } : { archived: false },
       include: { client: true, tasks: true },
       orderBy: { dueDate: "asc" },
     }),
@@ -56,6 +58,7 @@ export default async function Proyectos({
     (page - 1) * pageSize,
     page * pageSize,
   );
+  const showingArchived = q.archived === "1";
   return (
     <AppShell>
       <div className="content">
@@ -71,6 +74,7 @@ export default async function Proyectos({
             ＋ Nuevo proyecto
           </Link>
         </div>
+        <div className="project-archive-toolbar"><Link className="btn ghost small-btn" href={showingArchived ? "/proyectos" : "/proyectos?archived=1"}>{showingArchived ? "Ver proyectos activos" : "Ver proyectos archivados"}</Link></div>
         <div className="view-tabs">
           <Link className="active" href="/proyectos">
             ▥ &nbsp;Tablero
@@ -118,12 +122,12 @@ export default async function Proyectos({
             Filtrar
           </button>
         </form>
-        {q.view === "fichas" ? null : <ProjectBoard projects={projects} />}
+        {q.view === "fichas" || showingArchived ? null : <ProjectBoard projects={projects} />}
         <div className="card table-card" style={{ marginTop: 22 }}>
           <div className="card-heading">
             <div>
-              <h2 className="section-title">Fichas de proyectos</h2>
-              <p className="subtitle">{projects.length} proyectos visibles</p>
+              <h2 className="section-title">{showingArchived ? "Proyectos archivados" : "Fichas de proyectos"}</h2>
+              <p className="subtitle">{projects.length} proyectos {showingArchived ? "archivados" : "visibles"}</p>
             </div>
           </div>
           {projects.length ? (
@@ -179,7 +183,7 @@ export default async function Proyectos({
                       </td>
                       <td data-label="Entrega">{date(project.dueDate)}</td>
                       <td data-label="Acciones">
-                        <ProjectActions id={project.id} name={project.name} />
+                        <ProjectActions id={project.id} name={project.name} archived={showingArchived} />
                       </td>
                     </tr>
                   ))}
@@ -200,6 +204,7 @@ export default async function Proyectos({
             status: q.status,
             priority: q.priority,
             view: q.view,
+            archived: q.archived,
           }}
         />
       </div>

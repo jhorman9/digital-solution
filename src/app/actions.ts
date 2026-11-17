@@ -40,7 +40,9 @@ const projectSchema = z.object({
   dueDate: z.coerce.date(),
 });
 const idSchema = z.string().uuid();
-const calendarDateSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Fecha inválida");
+const calendarDateSchema = z
+  .string()
+  .regex(/^\d{4}-\d{2}-\d{2}$/, "Fecha inválida");
 
 export async function createClient(form: FormData) {
   await requireAuth();
@@ -96,7 +98,9 @@ export async function deleteClient(form: FormData) {
   );
   const related = rows[0];
   if (related && Object.values(related).some((value) => Number(value) > 0)) {
-    redirect(`/clientes?error=${encodeURIComponent("No se puede eliminar una empresa con historial. Archívala para conservar sus proyectos y movimientos.")}`);
+    redirect(
+      `/clientes?error=${encodeURIComponent("No se puede eliminar una empresa con historial. Archívala para conservar sus proyectos y movimientos.")}`,
+    );
   }
   await pool.query("DELETE FROM clients WHERE id=?", [id]);
   revalidatePath("/clientes");
@@ -155,8 +159,19 @@ export async function updateProjectName(id: string, name: string) {
   await requireAuth();
   const projectId = idSchema.parse(id);
   const nextName = z.string().min(2).max(180).parse(name.trim());
-  await pool.query("UPDATE projects SET name=? WHERE id=?", [nextName, projectId]);
-  await pool.query("INSERT INTO histories (id,projectId,type,description,date) VALUES (?,?,?,?,NOW())", [crypto.randomUUID(), projectId, "UPDATED", `Título cambiado a ${nextName}`]);
+  await pool.query("UPDATE projects SET name=? WHERE id=?", [
+    nextName,
+    projectId,
+  ]);
+  await pool.query(
+    "INSERT INTO histories (id,projectId,type,description,date) VALUES (?,?,?,?,NOW())",
+    [
+      crypto.randomUUID(),
+      projectId,
+      "UPDATED",
+      `Título cambiado a ${nextName}`,
+    ],
+  );
   revalidatePath("/proyectos");
   revalidatePath(`/proyectos/${projectId}`);
   revalidatePath("/");
@@ -166,7 +181,8 @@ export async function updateProjectName(id: string, name: string) {
 export async function deleteProject(id: string) {
   await requireAuth();
   const projectId = idSchema.parse(id);
-  const [rows] = await pool.query<RowDataPacket[]>(`SELECT
+  const [rows] = await pool.query<RowDataPacket[]>(
+    `SELECT
     (SELECT COUNT(*) FROM tasks WHERE projectId=?) +
     (SELECT COUNT(*) FROM checklistItems WHERE projectId=?) +
     (SELECT COUNT(*) FROM deliverables WHERE projectId=?) +
@@ -174,9 +190,61 @@ export async function deleteProject(id: string) {
     (SELECT COUNT(*) FROM changeRequests WHERE projectId=?) +
     (SELECT COUNT(*) FROM resources WHERE projectId=?) +
     (SELECT COUNT(*) FROM histories WHERE projectId=?) +
-    (SELECT COUNT(*) FROM metrics WHERE projectId=?) AS related`, [projectId, projectId, projectId, projectId, projectId, projectId, projectId, projectId]);
-  if (Number(rows[0]?.related || 0) > 0) return { ok: false, error: "Este proyecto tiene historial o trabajo relacionado. Archívalo para conservar esos datos." };
+    (SELECT COUNT(*) FROM metrics WHERE projectId=?) AS related`,
+    [
+      projectId,
+      projectId,
+      projectId,
+      projectId,
+      projectId,
+      projectId,
+      projectId,
+      projectId,
+    ],
+  );
+  if (Number(rows[0]?.related || 0) > 0)
+    return {
+      ok: false,
+      error:
+        "Este proyecto tiene historial o trabajo relacionado. Archívalo para conservar esos datos.",
+    };
   await pool.query("DELETE FROM projects WHERE id=?", [projectId]);
+  revalidatePath("/proyectos");
+  revalidatePath("/");
+  return { ok: true };
+}
+
+export async function archiveProject(id: string) {
+  await requireAuth();
+  const projectId = idSchema.parse(id);
+  await pool.query("UPDATE projects SET archived=1 WHERE id=?", [projectId]);
+  await pool.query(
+    "INSERT INTO histories (id,projectId,type,description,date) VALUES (?,?,?,?,NOW())",
+    [
+      crypto.randomUUID(),
+      projectId,
+      "ARCHIVED",
+      "Proyecto archivado para conservar su historial",
+    ],
+  );
+  revalidatePath("/proyectos");
+  revalidatePath("/");
+  return { ok: true };
+}
+
+export async function restoreProject(id: string) {
+  await requireAuth();
+  const projectId = idSchema.parse(id);
+  await pool.query("UPDATE projects SET archived=0 WHERE id=?", [projectId]);
+  await pool.query(
+    "INSERT INTO histories (id,projectId,type,description,date) VALUES (?,?,?,?,NOW())",
+    [
+      crypto.randomUUID(),
+      projectId,
+      "RESTORED",
+      "Proyecto habilitado nuevamente",
+    ],
+  );
   revalidatePath("/proyectos");
   revalidatePath("/");
   return { ok: true };
