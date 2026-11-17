@@ -289,6 +289,13 @@ details > summary::-webkit-details-marker { display: none; }
 .push-control { display: flex; align-items: center; justify-content: flex-end; gap: 6px; flex-wrap: wrap; }
 .push-button { display: inline-flex; align-items: center; gap: 7px; }
 .push-status { color: var(--muted); font-size: 11px; }
+.sidebar-settings { display: flex; align-items: center; gap: 10px; margin: 10px 14px 0; padding: 10px 12px; border-radius: 9px; color: var(--muted); font-size: 12px; }
+.sidebar-settings:hover, .sidebar-settings.active { background: var(--soft); color: var(--ink); font-weight: 800; }
+.settings-card { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 24px; }
+.settings-card-copy { display: flex; align-items: flex-start; gap: 14px; }
+.settings-icon { display: grid; width: 42px; height: 42px; place-items: center; flex: 0 0 42px; border-radius: 12px; background: var(--soft); font-size: 19px; }
+.settings-card-actions { display: grid; justify-items: end; gap: 8px; max-width: 330px; }
+.settings-help { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.5; text-align: right; }
 
 @media (max-width: 1200px) { .template-grid, .client-grid, .summary-project-grid { grid-template-columns: repeat(3, minmax(0,1fr)); } }
 @media (max-width: 1100px) { .stats-four, .stats-five { grid-template-columns: repeat(2, minmax(0,1fr)); } .kanban { grid-template-columns: repeat(4, 260px); } .template-grid, .client-grid, .summary-project-grid { grid-template-columns: repeat(2, minmax(0,1fr)); } .payment-company-grid { grid-template-columns: repeat(2, minmax(0,1fr)); } }
@@ -320,6 +327,9 @@ details > summary::-webkit-details-marker { display: none; }
 }
 
 @media (max-width: 900px) {
+  .settings-card { align-items: stretch; flex-direction: column; gap: 18px; padding: 18px; }
+  .settings-card-actions { justify-items: stretch; max-width: none; }
+  .settings-help { text-align: left; }
   .top-actions { gap: 6px; }
   .money-toggle { min-width: 36px; padding: 0 9px; }
   .money-toggle span { display: none; }
