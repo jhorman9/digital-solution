@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { LucideIcon } from "lucide-react";
 import { BarChart3, BriefcaseBusiness, Building2, CircleDollarSign, LayoutDashboard, Megaphone, Receipt, Settings, Settings2, WalletCards } from "lucide-react";
+import { useWorkspaceSettings } from "./WorkspaceSettings";
 
 type NavItem = readonly [string, string, LucideIcon];
 type NavSection = { label: string; items: readonly NavItem[] };
@@ -18,10 +19,11 @@ const allItems = [...sections.flatMap((section) => section.items), ["Configuraci
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const { settings } = useWorkspaceSettings();
   const isActive = (href: string) => href === "/" ? pathname === "/" : pathname.startsWith(href);
   return <>
     <aside className="sidebar">
-      <Link href="/" className="brand brand-mark"><span className="brand-logo"><BriefcaseBusiness size={17} strokeWidth={2.4} /></span><span className="brand-copy"><strong>Jhorman Nieto P</strong><small>Espacio de trabajo</small></span></Link>
+      <Link href="/" className="brand brand-mark"><span className="brand-logo">{settings.logoUrl ? <img src={settings.logoUrl} alt="" /> : <BriefcaseBusiness size={17} strokeWidth={2.4} />}</span><span className="brand-copy"><strong>{settings.title}</strong><small>Espacio de trabajo</small></span></Link>
       <nav className="nav grouped-nav" aria-label="Navegación principal">{sections.map((section) => <div className="nav-group" key={section.label}><div className="eyebrow sidebar-label">{section.label}</div>{section.items.map(([label, href, Icon]) => <Link className={isActive(href) ? "active" : ""} href={href} key={href}><Icon className="nav-icon" size={16} strokeWidth={2} aria-hidden="true" />{label}</Link>)}</div>)}</nav>
       <Link className={isActive("/configuracion") ? "sidebar-settings active" : "sidebar-settings"} href="/configuracion"><Settings size={16} strokeWidth={2} aria-hidden="true" />Configuración</Link>
       <div className="sidebar-foot"><div className="profile"><strong>JN</strong><span><b>Jhorman Nieto</b><small>Digital Solutions</small></span></div></div>

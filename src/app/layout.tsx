@@ -3,6 +3,7 @@ import "sweetalert2/dist/sweetalert2.min.css";
 import "./globals.css";
 import PwaRegistration from "./components/PwaRegistration";
 import DeadlineNotificationWatcher from "./components/DeadlineNotificationWatcher";
+import { WorkspaceSettingsProvider } from "./components/WorkspaceSettings";
 export const metadata: Metadata = {
   title: "Digital Solutions · Operaciones",
   description: "Panel privado de operaciones",
@@ -17,7 +18,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="es">
-      <body><PwaRegistration /><DeadlineNotificationWatcher />{children}</body>
+      <body><WorkspaceSettingsProvider><PwaRegistration /><DeadlineNotificationWatcher />{children}</WorkspaceSettingsProvider></body>
     </html>
   );
 }

@@ -1,5 +1,6 @@
 import AppShell from "@/app/components/AppShell";
 import PushNotificationButton from "@/app/components/PushNotificationButton";
+import WorkspaceAppearanceForm from "./WorkspaceAppearanceForm";
 
 export default function ConfigurationPage() {
   return (
@@ -24,6 +25,10 @@ export default function ConfigurationPage() {
             <PushNotificationButton />
             <p className="settings-help">Activa los permisos en este dispositivo. Puedes enviar una prueba para confirmar que el canal funciona.</p>
           </div>
+        </section>
+        <section className="card settings-card appearance-card">
+          <div className="settings-card-copy"><span className="settings-icon" aria-hidden="true">🎨</span><div><h2 className="section-title">Apariencia del espacio</h2><p className="subtitle">Personaliza el título, el logo y los colores de la interfaz.</p></div></div>
+          <WorkspaceAppearanceForm />
         </section>
       </div>
     </AppShell>
