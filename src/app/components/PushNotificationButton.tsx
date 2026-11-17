@@ -13,6 +13,7 @@ export default function PushNotificationButton() {
   const [supported, setSupported] = useState(true);
   const [active, setActive] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [testBusy, setTestBusy] = useState(false);
   const [message, setMessage] = useState("");
 
   useEffect(() => {
@@ -24,6 +25,13 @@ export default function PushNotificationButton() {
       }
       const registration = await navigator.serviceWorker.ready;
       const subscription = await registration.pushManager.getSubscription();
+      if (subscription) {
+        await fetch("/api/push/subscribe", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(subscription),
+        });
+      }
       if (!cancelled) setActive(Boolean(subscription));
     }
     void checkSubscription().catch(() => {
@@ -65,6 +73,21 @@ export default function PushNotificationButton() {
     }
   }
 
+  async function sendTest() {
+    setTestBusy(true);
+    setMessage("");
+    try {
+      const response = await fetch("/api/push/test", { method: "POST" });
+      const data = (await response.json()) as { sent?: number; error?: string };
+      if (!response.ok) throw new Error(data.error || "No se pudo enviar la prueba.");
+      setMessage(data.sent ? "Prueba enviada" : "No hay suscripciones guardadas");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "No se pudo enviar la prueba.");
+    } finally {
+      setTestBusy(false);
+    }
+  }
+
   if (!supported) return <span className="push-status">Avisos no disponibles</span>;
   return (
     <div className="push-control">
@@ -72,6 +95,7 @@ export default function PushNotificationButton() {
         {active ? <BellRing size={15} aria-hidden="true" /> : <Bell size={15} aria-hidden="true" />}
         {busy ? "Activando…" : active ? "Avisos activos" : "Activar avisos"}
       </button>
+      {active && <button className="btn ghost small-btn" type="button" onClick={sendTest} disabled={testBusy}>{testBusy ? "Enviando…" : "Enviar prueba"}</button>}
       {message && <span className="push-status" role="status" aria-live="polite">{message}</span>}
     </div>
   );

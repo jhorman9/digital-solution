@@ -285,7 +285,7 @@ details > summary::-webkit-details-marker { display: none; }
 .payment-filters select { min-width: 120px; }
 .table-note { display: block; margin-top: 4px; color: var(--muted); font-size: 10px; }
 .page-head-actions { display: flex; align-items: center; justify-content: flex-end; gap: 10px; flex-wrap: wrap; }
-.push-control { display: grid; justify-items: end; gap: 4px; }
+.push-control { display: flex; align-items: center; justify-content: flex-end; gap: 6px; flex-wrap: wrap; }
 .push-button { display: inline-flex; align-items: center; gap: 7px; }
 .push-status { color: var(--muted); font-size: 11px; }
 
