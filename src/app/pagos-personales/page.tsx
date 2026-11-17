@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { date, money } from "@/lib/labels";
 import { requireAuth } from "@/lib/auth";
 import PrivateMoney from "@/app/components/PrivateMoney";
+import Pagination from "@/app/components/Pagination";
 
 type Payment = {
   id: string;
@@ -39,7 +40,7 @@ function total(rows: Payment[]) {
 export default async function PersonalPaymentsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ status?: string; period?: string }>;
+  searchParams: Promise<{ status?: string; period?: string; page?: string }>;
 }) {
   await requireAuth();
   const params = await searchParams;
@@ -72,6 +73,8 @@ export default async function PersonalPaymentsPage({
             ? inYear(payment)
             : true,
   );
+  const page = Math.max(1, Number(params.page) || 1);
+  const visiblePayments = filtered.slice((page - 1) * 10, page * 10);
   return (
     <AppShell>
       <div className="content payments-page">
@@ -230,7 +233,7 @@ export default async function PersonalPaymentsPage({
                 </tr>
               </thead>
               <tbody>
-                {filtered.map((payment) => (
+                {visiblePayments.map((payment) => (
                   <tr key={payment.id}>
                     <td data-label="Fecha">{date(payment.paymentDate)}</td>
                     <td data-label="Concepto">
@@ -277,7 +280,7 @@ export default async function PersonalPaymentsPage({
                     <td colSpan={5}>
                       <div className="empty">
                         Todavía no hay pagos personales registrados.
-                      </div>
+        </div>
                     </td>
                   </tr>
                 )}
@@ -285,6 +288,7 @@ export default async function PersonalPaymentsPage({
             </table>
           </div>
         </section>
+        <Pagination page={page} total={filtered.length} basePath="/pagos-personales" query={{ status: params.status, period: params.period }} />
       </div>
     </AppShell>
   );

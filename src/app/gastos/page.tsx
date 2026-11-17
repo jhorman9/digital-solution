@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { date, money } from "@/lib/labels";
 import { requireAuth } from "@/lib/auth";
 import PrivateMoney from "@/app/components/PrivateMoney";
+import Pagination from "@/app/components/Pagination";
 
 type Expense = {
   id: string;
@@ -37,7 +38,7 @@ function total(rows: Expense[]) {
 export default async function PersonalExpensesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ category?: string; period?: string }>;
+  searchParams: Promise<{ category?: string; period?: string; page?: string }>;
 }) {
   await requireAuth();
   const params = await searchParams;
@@ -72,6 +73,8 @@ export default async function PersonalExpensesPage({
               ? inYear(expense)
               : true,
     );
+  const page = Math.max(1, Number(params.page) || 1);
+  const visibleExpenses = filtered.slice((page - 1) * 10, page * 10);
   const categories = Array.from(
     new Set(expenses.map((expense) => expense.category)),
   );
@@ -262,7 +265,7 @@ export default async function PersonalExpensesPage({
                 </tr>
               </thead>
               <tbody>
-                {filtered.map((expense) => (
+                {visibleExpenses.map((expense) => (
                   <tr key={expense.id}>
                     <td data-label="Fecha">{date(expense.expenseDate)}</td>
                     <td data-label="Categoría">
@@ -282,7 +285,7 @@ export default async function PersonalExpensesPage({
                     <td colSpan={5}>
                       <div className="empty">
                         Todavía no hay gastos personales registrados.
-                      </div>
+        </div>
                     </td>
                   </tr>
                 )}
@@ -290,6 +293,7 @@ export default async function PersonalExpensesPage({
             </table>
           </div>
         </section>
+        <Pagination page={page} total={filtered.length} basePath="/gastos" query={{ category: params.category, period: params.period }} />
       </div>
     </AppShell>
   );

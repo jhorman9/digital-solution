@@ -2,11 +2,16 @@ import { db } from "@/lib/db";
 import { serviceOptions } from "@/lib/labels";
 import AppShell from "../components/AppShell";
 import { createTemplate, updateTemplate } from "../actions";
+import Pagination from "../components/Pagination";
 
-export default async function Plantillas() {
+export default async function Plantillas({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
+  const params = await searchParams;
   const templates = await db.checklistTemplate.findMany({
     include: { items: true },
   });
+  const page = Math.max(1, Number(params.page) || 1);
+  const pageSize = 10;
+  const visibleTemplates = templates.slice((page - 1) * pageSize, page * pageSize);
 
   return (
     <AppShell>
@@ -57,7 +62,7 @@ export default async function Plantillas() {
           </details>
         </div>
         <div className="template-grid">
-          {templates.map((template) => (
+          {visibleTemplates.map((template) => (
             <article className="template-card" key={template.id}>
               <span className="pill soft-pill">{template.service}</span>
               <h2>{template.name}</h2>
@@ -107,6 +112,7 @@ export default async function Plantillas() {
             <div className="card empty">No hay plantillas todavía.</div>
           )}
         </div>
+        <Pagination page={page} total={templates.length} basePath="/plantillas" />
       </div>
     </AppShell>
   );

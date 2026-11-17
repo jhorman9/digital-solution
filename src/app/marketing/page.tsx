@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { date, money } from "@/lib/labels";
 import { requireAuth } from "@/lib/auth";
 import PrivateMoney from "@/app/components/PrivateMoney";
+import Pagination from "@/app/components/Pagination";
 
 type Row = {
   id: string;
@@ -59,6 +60,7 @@ export default async function MarketingPage({
     project?: string;
     category?: string;
     period?: string;
+    page?: string;
   }>;
 }) {
   await requireAuth();
@@ -96,6 +98,8 @@ export default async function MarketingPage({
         return dateKey(expense.expenseDate).startsWith(today.slice(0, 4));
       return true;
     });
+  const page = Math.max(1, Number(params.page) || 1);
+  const visibleExpenses = filtered.slice((page - 1) * 10, page * 10);
   const confirmed = (payments as Payment[]).filter(
     (payment) => payment.status === "CONFIRMED",
   );
@@ -443,7 +447,7 @@ export default async function MarketingPage({
                 </tr>
               </thead>
               <tbody>
-                {filtered.map((expense) => (
+                {visibleExpenses.map((expense) => (
                   <tr key={expense.id}>
                     <td data-label="Fecha">{date(expense.expenseDate)}</td>
                     <td data-label="Empresa">
@@ -477,7 +481,7 @@ export default async function MarketingPage({
                       <div className="empty">
                         No hay gastos de marketing para los filtros
                         seleccionados.
-                      </div>
+        </div>
                     </td>
                   </tr>
                 )}
@@ -485,6 +489,7 @@ export default async function MarketingPage({
             </table>
           </div>
         </section>
+        <Pagination page={page} total={filtered.length} basePath="/marketing" query={{ client: params.client, project: params.project, category: params.category, period: params.period }} />
       </div>
     </AppShell>
   );

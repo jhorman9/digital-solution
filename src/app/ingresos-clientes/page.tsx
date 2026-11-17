@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { date, money } from "@/lib/labels";
 import { requireAuth } from "@/lib/auth";
 import PrivateMoney from "@/app/components/PrivateMoney";
+import Pagination from "@/app/components/Pagination";
 
 type Revenue = {
   id: string;
@@ -38,7 +39,7 @@ function total(rows: Revenue[]) {
 export default async function ClientRevenuesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ client?: string; period?: string }>;
+  searchParams: Promise<{ client?: string; period?: string; page?: string }>;
 }) {
   await requireAuth();
   const params = await searchParams;
@@ -71,6 +72,8 @@ export default async function ClientRevenuesPage({
             ? inYear(row)
             : true,
   );
+  const page = Math.max(1, Number(params.page) || 1);
+  const visibleRevenues = visible.slice((page - 1) * 10, page * 10);
   const periods = [
     rows.filter(inToday),
     rows.filter(inWeek),
@@ -284,7 +287,7 @@ export default async function ClientRevenuesPage({
                 </tr>
               </thead>
               <tbody>
-                {visible.map((revenue) => (
+                {visibleRevenues.map((revenue) => (
                   <tr key={revenue.id}>
                     <td data-label="Fecha">{date(revenue.revenueDate)}</td>
                     <td data-label="Empresa">
@@ -306,7 +309,7 @@ export default async function ClientRevenuesPage({
                     <td colSpan={4}>
                       <div className="empty">
                         Todavía no hay ingresos de clientes registrados.
-                      </div>
+        </div>
                     </td>
                   </tr>
                 )}
@@ -314,6 +317,7 @@ export default async function ClientRevenuesPage({
             </table>
           </div>
         </section>
+        <Pagination page={page} total={visible.length} basePath="/ingresos-clientes" query={{ client: params.client, period: params.period }} />
       </div>
     </AppShell>
   );

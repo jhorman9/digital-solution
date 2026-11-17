@@ -10,6 +10,7 @@ import {
 } from "@/lib/labels";
 import AppShell from "../components/AppShell";
 import ProjectBoard from "./ProjectBoard";
+import Pagination from "../components/Pagination";
 
 export default async function Proyectos({
   searchParams,
@@ -20,6 +21,7 @@ export default async function Proyectos({
     status?: string;
     priority?: string;
     view?: string;
+    page?: string;
   }>;
 }) {
   const q = await searchParams;
@@ -47,6 +49,9 @@ export default async function Proyectos({
       statusMatch
     );
   });
+  const page = Math.max(1, Number(q.page) || 1);
+  const pageSize = 10;
+  const visibleProjects = projects.slice((page - 1) * pageSize, page * pageSize);
   return (
     <AppShell>
       <div className="content">
@@ -134,7 +139,7 @@ export default async function Proyectos({
                   </tr>
                 </thead>
                 <tbody>
-                  {projects.map((project: any) => (
+                  {visibleProjects.map((project: any) => (
                     <tr key={project.id}>
                       <td data-label="Proyecto">
                         <Link href={`/proyectos/${project.id}`}>
@@ -177,6 +182,7 @@ export default async function Proyectos({
             <div className="empty">No hay proyectos con estos filtros.</div>
           )}
         </div>
+        <Pagination page={page} total={projects.length} basePath="/proyectos" query={{ client: q.client, service: q.service, status: q.status, priority: q.priority, view: q.view }} />
       </div>
     </AppShell>
   );

@@ -4,8 +4,9 @@ import AppShell from "../components/AppShell";
 import ClientForm from "../client-form";
 import { archiveClient, deleteClient, restoreClient, updateClient } from "../actions";
 import DeleteCompanyButton from "./DeleteCompanyButton";
+import Pagination from "../components/Pagination";
 
-type ClientesProps = { searchParams: Promise<{ archived?: string; error?: string }> };
+type ClientesProps = { searchParams: Promise<{ archived?: string; error?: string; page?: string }> };
 
 export default async function Clientes({ searchParams }: ClientesProps) {
   const params = await searchParams;
@@ -14,6 +15,9 @@ export default async function Clientes({ searchParams }: ClientesProps) {
     where: { archived: showArchived },
     include: { _count: { select: { projects: true } } },
   });
+  const page = Math.max(1, Number(params.page) || 1);
+  const pageSize = 10;
+  const visibleClients = clients.slice((page - 1) * pageSize, page * pageSize);
 
   return (
     <AppShell>
@@ -39,7 +43,7 @@ export default async function Clientes({ searchParams }: ClientesProps) {
         {params.error && <div className="error" role="alert">{params.error}</div>}
 
         <div className="client-grid">
-          {clients.map((client: any) => (
+          {visibleClients.map((client: any) => (
             <article className={`client-card ${showArchived ? "archived-card" : ""}`} key={client.id}>
               <div className="client-card-top">
                 <div className="avatar">
@@ -80,6 +84,7 @@ export default async function Clientes({ searchParams }: ClientesProps) {
           ))}
           {!clients.length && <div className="card empty">{showArchived ? "No hay empresas archivadas." : "No hay empresas activas todavía."}</div>}
         </div>
+        <Pagination page={page} total={clients.length} basePath="/clientes" query={{ archived: showArchived ? "1" : undefined }} />
       </div>
     </AppShell>
   );

@@ -75,6 +75,8 @@ button { cursor: pointer; }
 .btn.ghost { border-color: var(--line); background: #fff; color: var(--ink); }
 .btn.ghost:hover { border-color: #c6d3ca; background: var(--soft); }
 .install-button { gap: 7px; }
+.pagination { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 18px; color: var(--muted); font-size: 12px; }
+.disabled-button { cursor: not-allowed; opacity: .45; pointer-events: none; }
 
 .grid { display: grid; gap: 18px; }
 .stats { grid-template-columns: repeat(3, minmax(0,1fr)); margin-bottom: 24px; }

@@ -3,6 +3,7 @@ import { date, money } from "@/lib/labels";
 import AppShell from "../components/AppShell";
 import MetricForm from "./metric-form";
 import PrivateMoney from "../components/PrivateMoney";
+import Pagination from "../components/Pagination";
 
 export default async function Metricas({
   searchParams,
@@ -12,6 +13,7 @@ export default async function Metricas({
     platform?: string;
     from?: string;
     to?: string;
+    page?: string;
   }>;
 }) {
   const q = await searchParams;
@@ -36,6 +38,9 @@ export default async function Metricas({
       !q.to || new Date(metric.date) <= new Date(`${q.to}T23:59:59`);
     return clientMatch && platformMatch && fromMatch && toMatch;
   });
+  const page = Math.max(1, Number(q.page) || 1);
+  const pageSize = 10;
+  const visibleMetrics = metrics.slice((page - 1) * pageSize, page * pageSize);
   const total = (key: string) =>
     metrics.reduce(
       (sum: number, metric: any) => sum + Number(metric[key] || 0),
@@ -158,7 +163,7 @@ export default async function Metricas({
                   </tr>
                 </thead>
                 <tbody>
-                  {metrics.map((metric: any) => {
+                  {visibleMetrics.map((metric: any) => {
                     const ctr =
                       metric.impressions && metric.clicks
                         ? `${((metric.clicks / metric.impressions) * 100).toFixed(2)}%`
@@ -200,6 +205,7 @@ export default async function Metricas({
             </div>
           )}
         </div>
+        <Pagination page={page} total={metrics.length} basePath="/metricas" query={{ client: q.client, platform: q.platform, from: q.from, to: q.to }} />
       </div>
     </AppShell>
   );
