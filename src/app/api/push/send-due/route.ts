@@ -33,7 +33,7 @@ export async function POST(request: Request) {
 
   for (const expense of expenses) {
     const endDate = addDays(expense.expenseDate, Math.max(1, Number(expense.days || 1)) - 1);
-    const kind = endDate < today ? "EXPIRED" : endDate === today ? "DUE" : endDate === addDays(today, 1) ? "DUE_TOMORROW" : null;
+    const kind = endDate === addDays(today, -1) ? "EXPIRED" : endDate === today ? "DUE" : endDate === addDays(today, 1) ? "DUE_TOMORROW" : null;
     if (!kind) continue;
     const [created] = await pool.query<ResultSetHeader>("INSERT IGNORE INTO pushNotificationLog (id,expenseId,kind,notificationDate) VALUES (?,?,?,?)", [crypto.randomUUID(), expense.id, kind, today]);
     if (!created.affectedRows) continue;
