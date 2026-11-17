@@ -1,6 +1,7 @@
 "use client";
 import { useForm } from "react-hook-form";
 import { createProject } from "./actions";
+import MarkdownEditor from "./components/MarkdownEditor";
 const services = [
   "Páginas web a medida",
   "WordPress/WooCommerce",
@@ -53,7 +54,11 @@ export default function ProjectForm({
       </div>
       <div className="field full">
         <label>Descripción</label>
-        <textarea {...register("description")} rows={3} />
+        <MarkdownEditor
+          name="description"
+          rows={8}
+          placeholder="# Objetivo del proyecto\n\nDescribe el alcance, contexto y entregables."
+        />
       </div>
       <div className="field">
         <label>Fase</label>

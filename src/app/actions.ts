@@ -23,7 +23,7 @@ const clientSchema = z.object({
 const projectSchema = z.object({
   clientId: z.string().min(1),
   name: z.string().min(2),
-  description: z.string().optional(),
+  description: z.string().max(100000).optional(),
   services: z.string().min(1),
   phase: z.enum([
     "DISCOVERY",

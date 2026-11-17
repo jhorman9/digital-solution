@@ -9,6 +9,7 @@ import {
   statusTone,
 } from "@/lib/labels";
 import AppShell from "../../components/AppShell";
+import MarkdownPreview from "../../components/MarkdownPreview";
 import {
   applyTemplate,
   createChangeRequest,
@@ -66,7 +67,7 @@ export default async function ProjectDetail({
             <div className="eyebrow">{p.client.name}</div>
             <h1 className="title">{p.name}</h1>
             <p className="subtitle">
-              {p.description || "Sin descripción todavía."}
+              {p.description ? "Descripción del proyecto" : "Sin descripción todavía."}
             </p>
             <div className="filters detail-pills">
               {serviceList.map((service: string) => (
@@ -157,10 +158,12 @@ export default async function ProjectDetail({
             </div>
             <div className="card detail-card">
               <h2 className="section-title">Descripción</h2>
-              <p className="body-copy">
-                {p.description ||
-                  "Añade una descripción para documentar el objetivo y alcance del proyecto."}
-              </p>
+              <MarkdownPreview
+                value={
+                  p.description ||
+                  "Añade una descripción para documentar el objetivo y alcance del proyecto."
+                }
+              />
             </div>
           </div>
         </section>
