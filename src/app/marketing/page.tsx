@@ -7,6 +7,7 @@ import { requireAuth } from "@/lib/auth";
 import PrivateMoney from "@/app/components/PrivateMoney";
 import Pagination from "@/app/components/Pagination";
 import CampaignDatePreview from "./CampaignDatePreview";
+import PushNotificationButton from "@/app/components/PushNotificationButton";
 
 type Row = {
   id: string;
@@ -183,9 +184,12 @@ export default async function MarketingPage({
               de marketing.
             </p>
           </div>
-          <Link href="/pagos" className="btn ghost">
-            Ver ingresos de clientes
-          </Link>
+          <div className="page-head-actions">
+            <PushNotificationButton />
+            <Link href="/pagos" className="btn ghost">
+              Ver ingresos de clientes
+            </Link>
+          </div>
         </div>
         <section className="grid stats stats-four">
           <div className="card stat expense-balance-card">

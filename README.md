@@ -12,6 +12,12 @@ Panel privado en español para gestionar clientes, proyectos, tareas, entregas, 
 
 La aplicación usa `America/Panama`, formato `es-PA` y $. El acceso es de un solo propietario mediante `OWNER_EMAIL` y `OWNER_PASSWORD`; la sesión se guarda en una cookie HTTP-only firmada con `SESSION_SECRET`. Nunca se guardan contraseñas, tokens ni claves API de terceros.
 
+## Avisos de vencimientos
+
+En `/marketing`, pulsa **Activar avisos** y acepta los permisos del navegador. La aplicación revisa automáticamente los vencimientos mientras la webapp está abierta, aproximadamente cada minuto, y muestra una notificación con la empresa y el concepto cuando la publicidad vence mañana o vence hoy. No necesitas configurar un cronjob para este flujo.
+
+Los avisos requieren HTTPS en producción; `localhost` funciona para desarrollo. Si necesitas recibirlos con la aplicación completamente cerrada, entonces sí debes configurar VAPID y un servicio externo de tareas programadas como el endpoint opcional `/api/push/send-due`.
+
 ## Pagos
 
 En `/pagos` puedes registrar ingresos de clientes por empresa, asociarlos opcionalmente a un proyecto, marcarlos como pendientes o confirmados y consultar los totales recibidos. En `/pagos-personales` registras los pagos que te han realizado directamente a ti. En `/marketing` registras cuánto inviertes por empresa y proyecto usando la fórmula importe diario × cantidad de días (por ejemplo, $ 20 × 7 = $ 140). Marketing calcula sumas diarias, semanales, mensuales y anuales y el saldo de ingresos confirmados menos marketing. En `/gastos` registras únicamente tus gastos personales; no tienen empresa/proyecto y no se mezclan con marketing.
